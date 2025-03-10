@@ -13,6 +13,7 @@ public class Goal : MonoBehaviour
         if(proj != null){
             // If so, set goalMet to true
             Goal.goalMet = true;
+            Debug.Log("Projectile hit the goal and its true...");
             // Also set the alpha of the color to higher opacity
             Material mat = GetComponent<Renderer>().material;
             Color c = mat.color;

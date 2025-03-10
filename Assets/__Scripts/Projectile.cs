@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,19 +10,17 @@ public class Projectile : MonoBehaviour
 
     [SerializeField]
     private bool _awake = true;
-    public bool awake{
-        get { return _awake; }
-        set { _awake = value; }
+    public bool awake {
+        get{return _awake;}
+        private set{_awake = value;}
     }
-
-
+    
     private Vector3 prevPos;
-    // this private list stores the history of projectiles move distance
+    // This private List stores the history of Projectile's move distance
     private List<float> deltas = new List<float>();
     private Rigidbody rigid;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Start is called before the first frame update
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -32,45 +31,39 @@ public class Projectile : MonoBehaviour
         PROJECTILES.Add(this);
     }
 
-    // FixedUpdate is called once per physics update
-    void FixedUpdate(){
-        if(rigid.isKinematic || !awake){
-            return;
-        }
+    void FixedUpdate() {
+        if(rigid.isKinematic || !awake) return;
 
         Vector3 deltaV3 = transform.position - prevPos;
         deltas.Add(deltaV3.magnitude);
         prevPos = transform.position;
 
-        // Limit lookback
-        while(deltas.Count > LOOKBACK_COUNT){
+        // Limit lookback;  one of very few times that I'll use while!
+        while(deltas.Count > LOOKBACK_COUNT) {
             deltas.RemoveAt(0);
         }
 
-        // Iterate over the deltas and find the greatest one
+        // Iterate over deltas and find the greatest one
         float maxDelta = 0;
-
-        foreach(float delta in deltas){
-            if(delta > maxDelta) maxDelta = delta;
+        foreach(float f in deltas) {
+            if(f > maxDelta) maxDelta = f;
         }
 
-        // If the projectile hasn't moved more than the sleepThreshold, put it to sleep
-        if (maxDelta <= Physics.sleepThreshold){
-            // Set awake to false and put the rigidbody to sleep
+        // If the Projectile hasn't moved more than the sleepThreshold
+        if(maxDelta <= Physics.sleepThreshold) {
+            // Set awake to false add put the Rigidbody to sleep
             awake = false;
             rigid.Sleep();
         }
-
     }
 
-    private void OnDestroy(){
+    private void OnDestroy() {
         PROJECTILES.Remove(this);
     }
 
-    static public void DESTROY_PROJECTILES(){
-        foreach(Projectile p in PROJECTILES){
+    static public void DESTROY_PROJECTILES() {
+        foreach(Projectile p in PROJECTILES) {
             Destroy(p.gameObject);
         }
     }
-
 }

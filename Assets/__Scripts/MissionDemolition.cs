@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using TMPro;
 
@@ -97,6 +98,8 @@ public class MissionDemolition : MonoBehaviour
         if(level == levelMax){
             level = 0;
             shotsTaken = 0;
+            SceneManager.LoadScene("GameOver");
+
         }
         StartLevel();
     }
